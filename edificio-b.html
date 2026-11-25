@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Edificio B – UAEMex Valle de Teotihuacán</title>
+<style>
+:root{--bg:#0f1b2d;--fg:#fff;--card:#1b2b45;--ac:#f2b705;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1b2d;--fg:#fff;--card:#1b2b45}}
+html{color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif}
+h1{font-size:20px;margin:14px 16px 2px}
+p.s{margin:0 16px 8px;color:var(--ac);font-size:14px}
+#c{width:100%;height:55vh;display:block;touch-action:none}
+.card{background:var(--card);margin:10px 14px 18px;padding:14px;border-radius:12px;line-height:1.45;font-size:15px}
+.card b{color:var(--ac)}
+</style></head><body>
+<h1>Edificio B</h1>
+<p class="s">UAEMex · Centro Universitario Valle de Teotihuacán</p>
+<canvas id="c"></canvas>
+<div class="card"><b>Ingeniería en Computación (ICO)</b><br>
+Carrera que forma profesionistas capaces de diseñar, desarrollar y mantener sistemas de software y hardware, administrar redes y crear interfaces centradas en el usuario, aplicando la tecnología para resolver problemas reales de la región.<br><br>
+<small>Arrastra para girar el modelo 3D.</small></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const cv=document.getElementById('c');
+const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+const sc=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(45,1,0.1,100);
+cam.position.set(7,5,9);cam.lookAt(0,1.5,0);
+sc.add(new THREE.AmbientLight(0xffffff,0.7));
+const l=new THREE.DirectionalLight(0xffffff,0.8);l.position.set(5,10,7);sc.add(l);
+const g=new THREE.Group();sc.add(g);
+function box(w,h,d,x,y,z,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);g.add(m);return m}
+box(12,0.1,7,0,-0.05,0,0x3a7d44);
+box(8,3.6,3,0,1.8,0,0xd9d4c7);
+box(8.2,0.2,3.2,0,3.7,0,0x8b1d2c);
+for(let f=0;f<2;f++)for(let i=0;i<6;i++){
+ box(0.7,0.8,0.05,-3.3+i*1.32,0.9+f*1.7,1.53,0x6fb7e6);
+ box(0.7,0.8,0.05,-3.3+i*1.32,0.9+f*1.7,-1.53,0x6fb7e6);}
+box(1.2,1.5,0.06,0,0.75,1.55,0x5a3b1e);
+function rs(){const w=cv.clientWidth,h=cv.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+rs();addEventListener('resize',rs);
+let d=false,px=0,auto=true;
+cv.addEventListener('pointerdown',e=>{d=true;px=e.clientX;auto=false});
+addEventListener('pointerup',()=>d=false);
+addEventListener('pointermove',e=>{if(d){g.rotation.y+=(e.clientX-px)*0.01;px=e.clientX}});
+(function a(){if(auto)g.rotation.y+=0.006;r.render(sc,cam);requestAnimationFrame(a)})();
+</script></body></html>
