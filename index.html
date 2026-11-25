@@ -25,18 +25,36 @@ const cv=document.getElementById('c');
 const r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
 const sc=new THREE.Scene();
 const cam=new THREE.PerspectiveCamera(45,1,0.1,100);
-cam.position.set(7,5,9);cam.lookAt(0,1.5,0);
+cam.position.set(7,5,12);cam.lookAt(0,1.8,0);
 sc.add(new THREE.AmbientLight(0xffffff,0.7));
 const l=new THREE.DirectionalLight(0xffffff,0.8);l.position.set(5,10,7);sc.add(l);
 const g=new THREE.Group();sc.add(g);
+const GR=0x0b5d3b,WH=0xf1f1ee,GL=0x1c2b33;
 function box(w,h,d,x,y,z,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);g.add(m);return m}
-box(12,0.1,7,0,-0.05,0,0x3a7d44);
-box(8,3.6,3,0,1.8,0,0xd9d4c7);
-box(8.2,0.2,3.2,0,3.7,0,0x8b1d2c);
-for(let f=0;f<2;f++)for(let i=0;i<6;i++){
- box(0.7,0.8,0.05,-3.3+i*1.32,0.9+f*1.7,1.53,0x6fb7e6);
- box(0.7,0.8,0.05,-3.3+i*1.32,0.9+f*1.7,-1.53,0x6fb7e6);}
-box(1.2,1.5,0.06,0,0.75,1.55,0x5a3b1e);
+box(16,0.1,10,0,-0.05,0,0x5fa04a);
+box(5,0.02,1.6,0,0.01,2.6,0xcfcac0);
+box(10,3.6,3,0,1.8,0,WH);
+box(10.2,0.5,3.2,0,3.85,0,GR);
+box(10.1,0.2,3.1,0,1.75,0,GR);
+for(let i=0;i<=6;i++){const x=-5+i*(10/6);
+ box(0.35,3.6,0.35,x,1.8,1.55,GR);box(0.35,3.6,0.35,x,1.8,-1.55,GR);}
+for(let i=0;i<6;i++){const x=-5+(i+0.5)*(10/6);
+ for(const z of[1.52,-1.52]){
+  box(1.1,0.9,0.05,x,2.6,z,GL);
+  box(1.1,0.9,0.05,x,0.95,z,GL);}}
+const cv2=document.createElement('canvas');cv2.width=cv2.height=128;
+const k=cv2.getContext('2d');k.fillStyle='#0b5d3b';k.fillRect(0,0,128,128);
+k.fillStyle='#f1f1ee';k.font='bold 100px Arial';k.textAlign='center';k.textBaseline='middle';k.fillText('B',64,70);
+const tx=new THREE.CanvasTexture(cv2);
+for(const [x,ry] of[[5.12,Math.PI/2],[-5.12,-Math.PI/2]]){
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(0.9,0.9),new THREE.MeshBasicMaterial({map:tx}));
+ m.position.set(x,3.85,0);m.rotation.y=ry;g.add(m);}
+const lb=new THREE.Mesh(new THREE.PlaneGeometry(0.46,0.46),new THREE.MeshBasicMaterial({map:tx}));
+lb.position.set(-4.6,3.85,1.62);g.add(lb);
+function tree(x,z,h){box(0.15,h*0.4,0.15,x,h*0.2,z,0x5a3b1e);
+ const c=new THREE.Mesh(new THREE.ConeGeometry(0.6,h*0.8,10),new THREE.MeshLambertMaterial({color:0x2f6b2f}));
+ c.position.set(x,h*0.4+h*0.4,z);g.add(c)}
+tree(-6.5,2.5,2.6);tree(6.5,3,3);tree(-2,4,2);tree(3,-3.5,2.4);tree(-6,-3,2.8);
 function rs(){const w=cv.clientWidth,h=cv.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
 rs();addEventListener('resize',rs);
 let d=false,px=0,auto=true;
